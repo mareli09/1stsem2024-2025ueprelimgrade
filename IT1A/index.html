@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Lookup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        input {
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px;
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 10px;
+            white-space: pre-wrap; /* Preserve formatting */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Grade Lookup</h2>
+    <input type="text" id="studentNo" placeholder="Enter your Student No." />
+    <button onclick="lookupGrade()">Check Grade</button>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    const grades = {
+        '20241103128': { name: 'ALCID, JOAQUIN ANTONIO', grade: 2.00, narrative: 'B GOOD', remarks: 'PASSED' },
+        '20241112221': { name: 'ALEJANDRO, TIMOTHY JAMES', grade: 1.50, narrative: 'A- VERY GOOD', remarks: 'PASSED' },
+        '20241114716': { name: 'ALFAJORA, RUVIC DRIESCH R', grade: 2.25, narrative: 'B- GOOD', remarks: 'PASSED' },
+        '20141144732': { name: 'AÑONUEVO, JANA F', grade: 1.50, narrative: 'A- VERY GOOD', remarks: 'PASSED' },
+        '20241108634': { name: 'APELLANES, JUAN RAPHAEL S', grade: 2.50, narrative: 'C+ FAIR', remarks: 'PASSED' },
+        '20221122209': { name: 'ASSIN, MIGUEL JAMES T', grade: 1.75, narrative: 'B+ VERY GOOD', remarks: 'PASSED' },
+        '20241112027': { name: 'BALANG, JHON MICHAEL V', grade: 2.50, narrative: 'C+ FAIR', remarks: 'PASSED' },
+        '20241109671': { name: 'BALSOMO, JUSTIN LUIS C', grade: 2.25, narrative: 'B- GOOD', remarks: 'PASSED' },
+        '20241109693': { name: 'BIMEDA, JUSTINE T', grade: 2.25, narrative: 'B- GOOD', remarks: 'PASSED' },
+        '20241109375': { name: 'BUENCAMINO, EZRAEL A', grade: 1.75, narrative: 'B+ VERY GOOD', remarks: 'PASSED' },
+        '20241109477': { name: 'BUENSUCESO, RAMON REOUBEN P', grade: 1.50, narrative: 'A- VERY GOOD', remarks: 'PASSED' },
+        '20151154357': { name: 'CACNIO, GILBERT B', grade: 4.00, narrative: 'FAILED', remarks: 'FAILED' },
+        '20241114487': { name: 'CALUB, CARLOS MIGUEL P', grade: 1.25, narrative: 'A EXCELLENT', remarks: 'PASSED' },
+        '20241114192': { name: 'CRUZ, JUAN PAOLO C', grade: 1.50, narrative: 'A- VERY GOOD', remarks: 'PASSED' },
+        '20241148492': { name: 'DACUTAN, ARAGORN TYDHUZ', grade: 3.00, narrative: 'C - PASSED', remarks: 'PASSED' },
+        '20221110378': { name: 'DALAO, XARRIEZ BRANDON C', grade: 2.25, narrative: 'B- GOOD', remarks: 'PASSED' },
+        '20141141700': { name: 'DE LEON, GABRIEL MARTIN C', grade: 1.25, narrative: 'A EXCELLENT', remarks: 'PASSED' },
+        '20221100965': { name: 'DELA CRUZ, SHANE LORENZ D', grade: 1.75, narrative: 'B+ VERY GOOD', remarks: 'PASSED' },
+        '20241109240': { name: 'EMBALSADO, LYRA ASHLEY U', grade: 1.50, narrative: 'A- VERY GOOD', remarks: 'PASSED' },
+        '20241110769': { name: 'ESPIRITU, FERDINAND JR. I', grade: 1.50, narrative: 'A- VERY GOOD', remarks: 'PASSED' },
+        '20221101059': { name: 'FALLESGON, RIEJELA ROZANNE C', grade: 1.75, narrative: 'B+ VERY GOOD', remarks: 'PASSED' },
+        '20241100094': { name: 'FRANCISCO, LOVELY SHAENE A', grade: 2.25, narrative: 'B- GOOD', remarks: 'PASSED' },
+        '20181148298': { name: 'GO, FRANCIS ADRIAN B', grade: 1.75, narrative: 'B+ VERY GOOD', remarks: 'PASSED' },
+        '20241102001': { name: 'GOKIOCO, CHRISTIAN HOWARD A', grade: 1.75, narrative: 'B+ VERY GOOD', remarks: 'PASSED' },
+        '20241106310': { name: 'LAMANDO, LOUIE D', grade: 1.75, narrative: 'B+ VERY GOOD', remarks: 'PASSED' },
+        '20241113575': { name: 'MANGILIT, CASEY', grade: 4.00, narrative: 'FAILED', remarks: 'FAILED' },
+        '20241113951': { name: 'MORADA, ISABELLE LORAINE T', grade: 2.25, narrative: 'B- GOOD', remarks: 'PASSED' },
+        '20241112958': { name: 'NAMION, DENISSE MARGARETT B', grade: 2.00, narrative: 'B GOOD', remarks: 'PASSED' },
+        '20221107002': { name: 'PADUA, JUSTINE BRYAN R', grade: 1.50, narrative: 'A- VERY GOOD', remarks: 'PASSED' },
+        '20241112016': { name: 'PETACA, AEGENE TROY R', grade: 1.50, narrative: 'A- VERY GOOD', remarks: 'PASSED' },
+        '20241114750': { name: 'PRANADA, YCKHO ANGELO D', grade: 2.00, narrative: 'B GOOD', remarks: 'PASSED' },
+        '20221106112': { name: 'REBOREDO, KIRSTEN KHURT D', grade: 2.25, narrative: 'B- GOOD', remarks: 'PASSED' },
+        '20241114330': { name: 'REBUELTA, RIGEL ARCTURUS L', grade: 1.50, narrative: 'A- VERY GOOD', remarks: 'PASSED' },
+        '20241100038': { name: 'RIVERA, CARLOS AERON D', grade: 4.00, narrative: 'FAILED', remarks: 'FAILED' },
+        '20221106372': { name: 'ROSQUETA, EMUEL R', grade: 1.75, narrative: 'B+ VERY GOOD', remarks: 'PASSED' },
+        '20241101279': { name: 'RUAR, AVIE CLIER G', grade: 2.50, narrative: 'C+ FAIR', remarks: 'PASSED' },
+        '20221104014': { name: 'SANCHEZ, NEIL JOHN S', grade: 1.75, narrative: 'B+ VERY GOOD', remarks: 'PASSED' },
+        '20241113246': { name: 'SUAREZ, KATHERINE LYN A', grade: 2.25, narrative: 'B- GOOD', remarks: 'PASSED' },
+        '20241103059': { name: 'TAN, KYLE MARTIN D', grade: 2.25, narrative: 'B- GOOD', remarks: 'PASSED' },
+        '20241110861': { name: 'VECIDA, JOANNA REEZEL E', grade: 1.25, narrative: 'A EXCELLENT', remarks: 'PASSED' },
+        '20241110827': { name: 'VECIDA, JOANNA ROCEL E', grade: 1.50, narrative: 'A- VERY GOOD', remarks: 'PASSED' },
+        '20241110521': { name: 'YANGA, DENRICH CLARENCE S', grade: 1.75, narrative: 'B+ VERY GOOD', remarks: 'PASSED' },
+    };
+
+    function lookupGrade() {
+        const studentNo = document.getElementById('studentNo').value.trim();
+        const resultDiv = document.getElementById('result');
+
+        if (grades[studentNo]) {
+            const { name, grade, narrative, remarks } = grades[studentNo];
+            resultDiv.textContent = `Name: ${name}\nGrade: ${grade}\nNarrative: ${narrative}\nRemarks: ${remarks}`;
+        } else {
+            resultDiv.textContent = 'Student number not found. Please check and try again.';
+        }
+    }
+</script>
+
+</body>
+</html>
